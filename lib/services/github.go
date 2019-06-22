@@ -252,6 +252,7 @@ func (c *GithubConnectorV3) MapClaims(claims GithubClaims) ([]string, []string) 
 			// see if the user belongs to this team
 			if team == mapping.Team {
 				logins = append(logins, mapping.Logins...)
+				logins = append(logins, claims.Username)
 				kubeGroups = append(kubeGroups, mapping.KubeGroups...)
 			}
 		}
