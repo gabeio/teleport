@@ -166,8 +166,8 @@ func StringSlice(name string, out *[]string, predicates ...Predicate) Param {
 // usage, by executing f.Close() on each of them
 // files slice will be nil if there's an error
 func FileSlice(name string, files *Files, predicates ...Predicate) Param {
-	defer r.MultipartForm.RemoveAll()
 	return func(r *http.Request) error {
+		defer r.MultipartForm.RemoveAll()
 		err := r.ParseMultipartForm(maxMemoryBytes)
 		if err != nil {
 			return err
