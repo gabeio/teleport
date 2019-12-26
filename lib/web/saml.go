@@ -95,6 +95,9 @@ func (m *Handler) samlACS(w http.ResponseWriter, r *http.Request, p httprouter.P
 	if err != nil {
 		return nil, trace.Wrap(err)
 	}
+	if r.MultipartForm != nil {
+		defer r.MultipartForm.RemoveAll()
+	}
 
 	l := log.WithFields(log.Fields{trace.Component: "SAML"})
 
