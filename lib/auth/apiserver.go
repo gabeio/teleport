@@ -312,9 +312,6 @@ type upsertServerRawReq struct {
 
 // upsertServer is a common utility function
 func (s *APIServer) upsertServer(auth ClientI, role teleport.Role, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req upsertServerRawReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -364,9 +361,6 @@ func (s *APIServer) upsertServer(auth ClientI, role teleport.Role, w http.Respon
 
 // keepAliveNode updates node TTL in the backend
 func (s *APIServer) keepAliveNode(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var handle services.KeepAlive
 	if err := httplib.ReadJSON(r, &handle); err != nil {
 		return nil, trace.Wrap(err)
@@ -384,9 +378,6 @@ type upsertNodesReq struct {
 
 // upsertNodes is used to bulk insert nodes into the backend.
 func (s *APIServer) upsertNodes(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req upsertNodesReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -410,17 +401,11 @@ func (s *APIServer) upsertNodes(auth ClientI, w http.ResponseWriter, r *http.Req
 
 // upsertNode is called by remote SSH nodes when they ping back into the auth service
 func (s *APIServer) upsertNode(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	return s.upsertServer(auth, teleport.RoleNode, w, r, p, version)
 }
 
 // getNodes returns registered SSH nodes
 func (s *APIServer) getNodes(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	namespace := p.ByName("namespace")
 	if !services.IsValidNamespace(namespace) {
 		return nil, trace.BadParameter("invalid namespace %q", namespace)
@@ -443,9 +428,6 @@ func (s *APIServer) getNodes(auth ClientI, w http.ResponseWriter, r *http.Reques
 
 // deleteAllNodes deletes all nodes
 func (s *APIServer) deleteAllNodes(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	namespace := p.ByName("namespace")
 	if !services.IsValidNamespace(namespace) {
 		return nil, trace.BadParameter("invalid namespace %q", namespace)
@@ -459,9 +441,6 @@ func (s *APIServer) deleteAllNodes(auth ClientI, w http.ResponseWriter, r *http.
 
 // deleteNode deletes node
 func (s *APIServer) deleteNode(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	namespace := p.ByName("namespace")
 	if !services.IsValidNamespace(namespace) {
 		return nil, trace.BadParameter("invalid namespace %q", namespace)
@@ -479,17 +458,11 @@ func (s *APIServer) deleteNode(auth ClientI, w http.ResponseWriter, r *http.Requ
 
 // upsertProxy is called by remote SSH nodes when they ping back into the auth service
 func (s *APIServer) upsertProxy(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	return s.upsertServer(auth, teleport.RoleProxy, w, r, p, version)
 }
 
 // getProxies returns registered proxies
 func (s *APIServer) getProxies(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	servers, err := auth.GetProxies()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -499,9 +472,6 @@ func (s *APIServer) getProxies(auth ClientI, w http.ResponseWriter, r *http.Requ
 
 // deleteAllProxies deletes all proxies
 func (s *APIServer) deleteAllProxies(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	err := auth.DeleteAllProxies()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -511,9 +481,6 @@ func (s *APIServer) deleteAllProxies(auth ClientI, w http.ResponseWriter, r *htt
 
 // deleteProxy deletes proxy
 func (s *APIServer) deleteProxy(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	name := p.ByName("name")
 	if name == "" {
 		return nil, trace.BadParameter("missing proxy name")
@@ -527,17 +494,11 @@ func (s *APIServer) deleteProxy(auth ClientI, w http.ResponseWriter, r *http.Req
 
 // upsertAuthServer is called by remote Auth servers when they ping back into the auth service
 func (s *APIServer) upsertAuthServer(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	return s.upsertServer(auth, teleport.RoleAuth, w, r, p, version)
 }
 
 // getAuthServers returns registered auth servers
 func (s *APIServer) getAuthServers(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	servers, err := auth.GetAuthServers()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -564,9 +525,6 @@ type upsertReverseTunnelRawReq struct {
 
 // upsertReverseTunnel is called by admin to create a reverse tunnel to remote proxy
 func (s *APIServer) upsertReverseTunnel(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req upsertReverseTunnelRawReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -586,9 +544,6 @@ func (s *APIServer) upsertReverseTunnel(auth ClientI, w http.ResponseWriter, r *
 
 // getReverseTunnels returns a list of reverse tunnels
 func (s *APIServer) getReverseTunnels(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	reverseTunnels, err := auth.GetReverseTunnels()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -606,9 +561,6 @@ func (s *APIServer) getReverseTunnels(auth ClientI, w http.ResponseWriter, r *ht
 
 // deleteReverseTunnel deletes reverse tunnel
 func (s *APIServer) deleteReverseTunnel(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	domainName := p.ByName("domain")
 	err := auth.DeleteReverseTunnel(domainName)
 	if err != nil {
@@ -622,9 +574,6 @@ type upsertTrustedClusterReq struct {
 }
 
 func (s *APIServer) upsertTrustedCluster(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *upsertTrustedClusterReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -643,9 +592,6 @@ func (s *APIServer) upsertTrustedCluster(auth ClientI, w http.ResponseWriter, r 
 }
 
 func (s *APIServer) validateTrustedCluster(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var validateRequestRaw ValidateTrustedClusterRequestRaw
 	if err := httplib.ReadJSON(r, &validateRequestRaw); err != nil {
 		return nil, trace.Wrap(err)
@@ -670,23 +616,14 @@ func (s *APIServer) validateTrustedCluster(auth ClientI, w http.ResponseWriter, 
 }
 
 func (s *APIServer) getTrustedCluster(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	return auth.GetTrustedCluster(p.ByName("name"))
 }
 
 func (s *APIServer) getTrustedClusters(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	return auth.GetTrustedClusters()
 }
 
 func (s *APIServer) deleteTrustedCluster(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	err := auth.DeleteTrustedCluster(p.ByName("name"))
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -697,9 +634,6 @@ func (s *APIServer) deleteTrustedCluster(auth ClientI, w http.ResponseWriter, r 
 
 // getTokens returns a list of active provisioning tokens. expired (inactive) tokens are not returned
 func (s *APIServer) getTokens(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	tokens, err := auth.GetTokens()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -709,9 +643,6 @@ func (s *APIServer) getTokens(auth ClientI, w http.ResponseWriter, r *http.Reque
 
 // getTokens returns provisioning token by name
 func (s *APIServer) getToken(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	token, err := auth.GetToken(p.ByName("token"))
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -721,9 +652,6 @@ func (s *APIServer) getToken(auth ClientI, w http.ResponseWriter, r *http.Reques
 
 // deleteToken deletes (revokes) a token by its value
 func (s *APIServer) deleteToken(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	token := p.ByName("token")
 	if err := auth.DeleteToken(token); err != nil {
 		return nil, trace.Wrap(err)
@@ -732,9 +660,6 @@ func (s *APIServer) deleteToken(auth ClientI, w http.ResponseWriter, r *http.Req
 }
 
 func (s *APIServer) deleteWebSession(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	user, sid := p.ByName("user"), p.ByName("sid")
 	err := auth.DeleteWebSession(user, sid)
 	if err != nil {
@@ -760,9 +685,6 @@ type sessionV1 struct {
 }
 
 func (s *APIServer) getWebSession(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	user, sid := p.ByName("user"), p.ByName("sid")
 	sess, err := auth.GetWebSessionInfo(user, sid)
 	if err != nil {
@@ -789,9 +711,6 @@ type generateUserCertReq struct {
 
 // DELETE IN: 4.2.0
 func (s *APIServer) generateUserCert(auth ClientI, w http.ResponseWriter, r *http.Request, _ httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *generateUserCertReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -817,9 +736,6 @@ type signInReq struct {
 }
 
 func (s *APIServer) u2fSignRequest(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *signInReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -838,9 +754,6 @@ type createWebSessionReq struct {
 }
 
 func (s *APIServer) createWebSession(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *createWebSessionReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -861,9 +774,6 @@ func (s *APIServer) createWebSession(auth ClientI, w http.ResponseWriter, r *htt
 }
 
 func (s *APIServer) authenticateWebUser(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req AuthenticateUserRequest
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -877,9 +787,6 @@ func (s *APIServer) authenticateWebUser(auth ClientI, w http.ResponseWriter, r *
 }
 
 func (s *APIServer) authenticateSSHUser(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req AuthenticateSSHRequest
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -889,9 +796,6 @@ func (s *APIServer) authenticateSSHUser(auth ClientI, w http.ResponseWriter, r *
 }
 
 func (s *APIServer) changePassword(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req services.ChangePasswordReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -910,9 +814,6 @@ type upsertPasswordReq struct {
 }
 
 func (s *APIServer) upsertPassword(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *upsertPasswordReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -932,9 +833,6 @@ type upsertUserRawReq struct {
 }
 
 func (s *APIServer) upsertUser(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *upsertUserRawReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -957,9 +855,6 @@ type checkPasswordReq struct {
 }
 
 func (s *APIServer) checkPassword(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req checkPasswordReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -974,9 +869,6 @@ func (s *APIServer) checkPassword(auth ClientI, w http.ResponseWriter, r *http.R
 }
 
 func (s *APIServer) getUser(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	user, err := auth.GetUser(p.ByName("user"), false)
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -993,9 +885,6 @@ func rawMessage(data []byte, err error) (interface{}, error) {
 }
 
 func (s *APIServer) getUsers(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	users, err := auth.GetUsers(false)
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1012,9 +901,6 @@ func (s *APIServer) getUsers(auth ClientI, w http.ResponseWriter, r *http.Reques
 }
 
 func (s *APIServer) deleteUser(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	user := p.ByName("user")
 	if err := auth.DeleteUser(user); err != nil {
 		return nil, trace.Wrap(err)
@@ -1032,9 +918,6 @@ type generateKeyPairResponse struct {
 }
 
 func (s *APIServer) generateKeyPair(auth ClientI, w http.ResponseWriter, r *http.Request, _ httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *generateKeyPairReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1058,9 +941,6 @@ type generateHostCertReq struct {
 }
 
 func (s *APIServer) generateHostCert(auth ClientI, w http.ResponseWriter, r *http.Request, _ httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *generateHostCertReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1075,9 +955,6 @@ func (s *APIServer) generateHostCert(auth ClientI, w http.ResponseWriter, r *htt
 }
 
 func (s *APIServer) generateToken(auth ClientI, w http.ResponseWriter, r *http.Request, _ httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req GenerateTokenRequest
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1090,9 +967,6 @@ func (s *APIServer) generateToken(auth ClientI, w http.ResponseWriter, r *http.R
 }
 
 func (s *APIServer) registerUsingToken(auth ClientI, w http.ResponseWriter, r *http.Request, _ httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req RegisterUsingTokenRequest
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1113,9 +987,6 @@ type registerNewAuthServerReq struct {
 }
 
 func (s *APIServer) registerNewAuthServer(auth ClientI, w http.ResponseWriter, r *http.Request, _ httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *registerNewAuthServerReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1128,9 +999,6 @@ func (s *APIServer) registerNewAuthServer(auth ClientI, w http.ResponseWriter, r
 }
 
 func (s *APIServer) generateServerKeys(auth ClientI, w http.ResponseWriter, r *http.Request, _ httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req GenerateServerKeysRequest
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1148,9 +1016,6 @@ func (s *APIServer) generateServerKeys(auth ClientI, w http.ResponseWriter, r *h
 }
 
 func (s *APIServer) rotateCertAuthority(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req RotateRequest
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1167,9 +1032,6 @@ type upsertCertAuthorityRawReq struct {
 }
 
 func (s *APIServer) upsertCertAuthority(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *upsertCertAuthorityRawReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1192,9 +1054,6 @@ type rotateExternalCertAuthorityRawReq struct {
 }
 
 func (s *APIServer) rotateExternalCertAuthority(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req rotateExternalCertAuthorityRawReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1210,9 +1069,6 @@ func (s *APIServer) rotateExternalCertAuthority(auth ClientI, w http.ResponseWri
 }
 
 func (s *APIServer) getCertAuthorities(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	loadKeys, _, err := httplib.ParseBool(r.URL.Query(), "load_keys")
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1234,9 +1090,6 @@ func (s *APIServer) getCertAuthorities(auth ClientI, w http.ResponseWriter, r *h
 }
 
 func (s *APIServer) getCertAuthority(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	loadKeys, _, err := httplib.ParseBool(r.URL.Query(), "load_keys")
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1253,9 +1106,6 @@ func (s *APIServer) getCertAuthority(auth ClientI, w http.ResponseWriter, r *htt
 }
 
 func (s *APIServer) getDomainName(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	domain, err := auth.GetDomainName()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1265,9 +1115,6 @@ func (s *APIServer) getDomainName(auth ClientI, w http.ResponseWriter, r *http.R
 
 // getClusterCACert returns the CAs for the local cluster without signing keys.
 func (s *APIServer) getClusterCACert(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	localCA, err := auth.GetClusterCACert()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1278,9 +1125,6 @@ func (s *APIServer) getClusterCACert(auth ClientI, w http.ResponseWriter, r *htt
 
 // getU2FAppID returns the U2F AppID in the auth configuration
 func (s *APIServer) getU2FAppID(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	cap, err := auth.GetAuthPreference()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1296,9 +1140,6 @@ func (s *APIServer) getU2FAppID(auth ClientI, w http.ResponseWriter, r *http.Req
 }
 
 func (s *APIServer) deleteCertAuthority(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	id := services.CertAuthID{
 		DomainName: p.ByName("domain"),
 		Type:       services.CertAuthType(p.ByName("type")),
@@ -1314,9 +1155,6 @@ type createSessionReq struct {
 }
 
 func (s *APIServer) createSession(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *createSessionReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1337,9 +1175,6 @@ type updateSessionReq struct {
 }
 
 func (s *APIServer) updateSession(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *updateSessionReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1356,9 +1191,6 @@ func (s *APIServer) updateSession(auth ClientI, w http.ResponseWriter, r *http.R
 }
 
 func (s *APIServer) deleteSession(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	err := auth.DeleteSession(p.ByName("namespace"), session.ID(p.ByName("id")))
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1367,9 +1199,6 @@ func (s *APIServer) deleteSession(auth ClientI, w http.ResponseWriter, r *http.R
 }
 
 func (s *APIServer) getSessions(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	namespace := p.ByName("namespace")
 	if !services.IsValidNamespace(namespace) {
 		return nil, trace.BadParameter("invalid namespace %q", namespace)
@@ -1382,9 +1211,6 @@ func (s *APIServer) getSessions(auth ClientI, w http.ResponseWriter, r *http.Req
 }
 
 func (s *APIServer) getSession(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	sid, err := session.ParseID(p.ByName("id"))
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1407,9 +1233,6 @@ type getSignupTokenDataResponse struct {
 
 // getSignupTokenData returns the signup data for a token.
 func (s *APIServer) getSignupTokenData(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	token := p.ByName("token")
 
 	user, otpQRCode, err := auth.GetSignupTokenData(token)
@@ -1424,9 +1247,6 @@ func (s *APIServer) getSignupTokenData(auth ClientI, w http.ResponseWriter, r *h
 }
 
 func (s *APIServer) getSignupU2FRegisterRequest(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	token := p.ByName("token")
 	u2fRegReq, err := auth.GetSignupU2FRegisterRequest(token)
 	if err != nil {
@@ -1441,9 +1261,6 @@ type createSignupTokenReq struct {
 }
 
 func (s *APIServer) createSignupToken(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *createSignupTokenReq
 
 	if err := httplib.ReadJSON(r, &req); err != nil {
@@ -1469,9 +1286,6 @@ type createUserWithTokenReq struct {
 }
 
 func (s *APIServer) createUserWithToken(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *createUserWithTokenReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1505,9 +1319,6 @@ type createUserWithU2FTokenReq struct {
 }
 
 func (s *APIServer) createUserWithU2FToken(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *createUserWithU2FTokenReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1527,9 +1338,6 @@ type upsertOIDCConnectorRawReq struct {
 }
 
 func (s *APIServer) upsertOIDCConnector(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *upsertOIDCConnectorRawReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1549,9 +1357,6 @@ func (s *APIServer) upsertOIDCConnector(auth ClientI, w http.ResponseWriter, r *
 }
 
 func (s *APIServer) getOIDCConnector(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	withSecrets, _, err := httplib.ParseBool(r.URL.Query(), "with_secrets")
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1564,9 +1369,6 @@ func (s *APIServer) getOIDCConnector(auth ClientI, w http.ResponseWriter, r *htt
 }
 
 func (s *APIServer) deleteOIDCConnector(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	err := auth.DeleteOIDCConnector(p.ByName("id"))
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1575,9 +1377,6 @@ func (s *APIServer) deleteOIDCConnector(auth ClientI, w http.ResponseWriter, r *
 }
 
 func (s *APIServer) getOIDCConnectors(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	withSecrets, _, err := httplib.ParseBool(r.URL.Query(), "with_secrets")
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1602,9 +1401,6 @@ type createOIDCAuthRequestReq struct {
 }
 
 func (s *APIServer) createOIDCAuthRequest(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *createOIDCAuthRequestReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1641,9 +1437,6 @@ type oidcAuthRawResponse struct {
 }
 
 func (s *APIServer) validateOIDCAuthCallback(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *validateOIDCAuthCallbackReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1682,9 +1475,6 @@ type createSAMLConnectorRawReq struct {
 }
 
 func (s *APIServer) createSAMLConnector(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *createSAMLConnectorRawReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1705,9 +1495,6 @@ type upsertSAMLConnectorRawReq struct {
 }
 
 func (s *APIServer) upsertSAMLConnector(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *upsertSAMLConnectorRawReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1724,9 +1511,6 @@ func (s *APIServer) upsertSAMLConnector(auth ClientI, w http.ResponseWriter, r *
 }
 
 func (s *APIServer) getSAMLConnector(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	withSecrets, _, err := httplib.ParseBool(r.URL.Query(), "with_secrets")
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1739,9 +1523,6 @@ func (s *APIServer) getSAMLConnector(auth ClientI, w http.ResponseWriter, r *htt
 }
 
 func (s *APIServer) deleteSAMLConnector(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	err := auth.DeleteSAMLConnector(p.ByName("id"))
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1750,9 +1531,6 @@ func (s *APIServer) deleteSAMLConnector(auth ClientI, w http.ResponseWriter, r *
 }
 
 func (s *APIServer) getSAMLConnectors(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	withSecrets, _, err := httplib.ParseBool(r.URL.Query(), "with_secrets")
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1777,9 +1555,6 @@ type createSAMLAuthRequestReq struct {
 }
 
 func (s *APIServer) createSAMLAuthRequest(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *createSAMLAuthRequestReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1816,9 +1591,6 @@ type samlAuthRawResponse struct {
 }
 
 func (s *APIServer) validateSAMLResponse(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *validateSAMLResponseReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1865,9 +1637,6 @@ type createGithubConnectorRawReq struct {
    Success response: {"message": "ok"}
 */
 func (s *APIServer) createGithubConnector(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req createGithubConnectorRawReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1895,9 +1664,6 @@ type upsertGithubConnectorRawReq struct {
    Success response: {"message": "ok"}
 */
 func (s *APIServer) upsertGithubConnector(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req upsertGithubConnectorRawReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -1919,9 +1685,6 @@ func (s *APIServer) upsertGithubConnector(auth ClientI, w http.ResponseWriter, r
    Success response: []services.GithubConnector
 */
 func (s *APIServer) getGithubConnectors(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	withSecrets, _, err := httplib.ParseBool(r.URL.Query(), "with_secrets")
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1948,9 +1711,6 @@ func (s *APIServer) getGithubConnectors(auth ClientI, w http.ResponseWriter, r *
    Success response: services.GithubConnector
 */
 func (s *APIServer) getGithubConnector(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	withSecrets, _, err := httplib.ParseBool(r.URL.Query(), "with_secrets")
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -1969,9 +1729,6 @@ func (s *APIServer) getGithubConnector(auth ClientI, w http.ResponseWriter, r *h
    Success response: {"message": "ok"}
 */
 func (s *APIServer) deleteGithubConnector(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	if err := auth.DeleteGithubConnector(p.ByName("id")); err != nil {
 		return nil, trace.Wrap(err)
 	}
@@ -1991,9 +1748,6 @@ type createGithubAuthRequestReq struct {
    Success response: services.GithubAuthRequest
 */
 func (s *APIServer) createGithubAuthRequest(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req createGithubAuthRequestReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -2038,9 +1792,6 @@ type githubAuthRawResponse struct {
    Success response: githubAuthRawResponse
 */
 func (s *APIServer) validateGithubAuthCallback(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req validateGithubAuthCallbackReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -2083,9 +1834,6 @@ func (s *APIServer) validateGithubAuthCallback(auth ClientI, w http.ResponseWrit
 //	'to'    : time filter in RFC3339 format
 //  ...     : other fields are passed directly to the audit backend
 func (s *APIServer) searchEvents(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var err error
 	to := time.Now().In(time.UTC)
 	from := to.AddDate(0, -1, 0) // one month ago
@@ -2127,9 +1875,6 @@ func (s *APIServer) searchEvents(auth ClientI, w http.ResponseWriter, r *http.Re
 
 // searchSessionEvents only allows searching audit log for events related to session playback.
 func (s *APIServer) searchSessionEvents(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var err error
 
 	// default values for "to" and "from" fields
@@ -2182,9 +1927,6 @@ type auditEventReq struct {
 
 // HTTP	POST /:version/events
 func (s *APIServer) emitAuditEvent(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req auditEventReq
 	err := httplib.ReadJSON(r, &req)
 	if err != nil {
@@ -2222,9 +1964,6 @@ func (s *APIServer) emitAuditEvent(auth ClientI, w http.ResponseWriter, r *http.
 
 // HTTP POST /:version/sessions/:id/slice
 func (s *APIServer) postSessionSlice(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2263,9 +2002,6 @@ func (s *APIServer) postSessionSlice(auth ClientI, w http.ResponseWriter, r *htt
 
 // HTTP POST /:version/sessions/:id/recording
 func (s *APIServer) uploadSessionRecording(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var files form.Files
 	var namespace, sid string
 
@@ -2276,6 +2012,9 @@ func (s *APIServer) uploadSessionRecording(auth ClientI, w http.ResponseWriter, 
 	)
 	if err != nil {
 		return nil, trace.Wrap(err)
+	}
+	if r.MultipartForm != nil {
+		defer r.MultipartForm.RemoveAll()
 	}
 	if !services.IsValidNamespace(namespace) {
 		return nil, trace.BadParameter("invalid namespace %q", namespace)
@@ -2324,9 +2063,6 @@ func (s *APIServer) uploadSessionRecording(auth ClientI, w http.ResponseWriter, 
 //   "offset"   : bytes from the beginning
 //   "bytes"    : number of bytes to read (it won't return more than 512Kb)
 func (s *APIServer) getSessionChunk(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	sid, err := session.ParseID(p.ByName("id"))
 	if err != nil {
 		return nil, trace.BadParameter("missing parameter id")
@@ -2364,9 +2100,6 @@ func (s *APIServer) getSessionChunk(auth ClientI, w http.ResponseWriter, r *http
 // Query:
 //    'after' : cursor value to return events newer than N. Defaults to 0, (return all)
 func (s *APIServer) getSessionEvents(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	sid, err := session.ParseID(p.ByName("id"))
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2392,9 +2125,6 @@ type upsertNamespaceReq struct {
 }
 
 func (s *APIServer) upsertNamespace(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *upsertNamespaceReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -2406,9 +2136,6 @@ func (s *APIServer) upsertNamespace(auth ClientI, w http.ResponseWriter, r *http
 }
 
 func (s *APIServer) getNamespaces(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	namespaces, err := auth.GetNamespaces()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2417,9 +2144,6 @@ func (s *APIServer) getNamespaces(auth ClientI, w http.ResponseWriter, r *http.R
 }
 
 func (s *APIServer) getNamespace(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	name := p.ByName("namespace")
 	if !services.IsValidNamespace(name) {
 		return nil, trace.BadParameter("invalid namespace %q", name)
@@ -2433,9 +2157,6 @@ func (s *APIServer) getNamespace(auth ClientI, w http.ResponseWriter, r *http.Re
 }
 
 func (s *APIServer) deleteNamespace(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	name := p.ByName("namespace")
 	if !services.IsValidNamespace(name) {
 		return nil, trace.BadParameter("invalid namespace %q", name)
@@ -2453,9 +2174,6 @@ type upsertRoleRawReq struct {
 }
 
 func (s *APIServer) upsertRole(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *upsertRoleRawReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -2472,9 +2190,6 @@ func (s *APIServer) upsertRole(auth ClientI, w http.ResponseWriter, r *http.Requ
 }
 
 func (s *APIServer) getRole(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	role, err := auth.GetRole(p.ByName("role"))
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2483,9 +2198,6 @@ func (s *APIServer) getRole(auth ClientI, w http.ResponseWriter, r *http.Request
 }
 
 func (s *APIServer) getRoles(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	roles, err := auth.GetRoles()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2502,9 +2214,6 @@ func (s *APIServer) getRoles(auth ClientI, w http.ResponseWriter, r *http.Reques
 }
 
 func (s *APIServer) deleteRole(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	role := p.ByName("role")
 	if err := auth.DeleteRole(role); err != nil {
 		return nil, trace.Wrap(err)
@@ -2513,9 +2222,6 @@ func (s *APIServer) deleteRole(auth ClientI, w http.ResponseWriter, r *http.Requ
 }
 
 func (s *APIServer) getClusterConfig(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	cc, err := auth.GetClusterConfig()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2529,9 +2235,6 @@ type setClusterConfigReq struct {
 }
 
 func (s *APIServer) setClusterConfig(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req setClusterConfigReq
 
 	err := httplib.ReadJSON(r, &req)
@@ -2553,9 +2256,6 @@ func (s *APIServer) setClusterConfig(auth ClientI, w http.ResponseWriter, r *htt
 }
 
 func (s *APIServer) getClusterName(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	cn, err := auth.GetClusterName()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2569,9 +2269,6 @@ type setClusterNameReq struct {
 }
 
 func (s *APIServer) setClusterName(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req setClusterNameReq
 
 	err := httplib.ReadJSON(r, &req)
@@ -2593,9 +2290,6 @@ func (s *APIServer) setClusterName(auth ClientI, w http.ResponseWriter, r *http.
 }
 
 func (s *APIServer) getStaticTokens(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	st, err := auth.GetStaticTokens()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2605,9 +2299,6 @@ func (s *APIServer) getStaticTokens(auth ClientI, w http.ResponseWriter, r *http
 }
 
 func (s *APIServer) deleteStaticTokens(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	err := auth.DeleteStaticTokens()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2620,9 +2311,6 @@ type setStaticTokensReq struct {
 }
 
 func (s *APIServer) setStaticTokens(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req setStaticTokensReq
 
 	err := httplib.ReadJSON(r, &req)
@@ -2644,9 +2332,6 @@ func (s *APIServer) setStaticTokens(auth ClientI, w http.ResponseWriter, r *http
 }
 
 func (s *APIServer) getClusterAuthPreference(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	cap, err := auth.GetAuthPreference()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2660,9 +2345,6 @@ type setClusterAuthPreferenceReq struct {
 }
 
 func (s *APIServer) setClusterAuthPreference(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req *setClusterAuthPreferenceReq
 
 	err := httplib.ReadJSON(r, &req)
@@ -2689,9 +2371,6 @@ type upsertTunnelConnectionRawReq struct {
 
 // upsertTunnelConnection updates or inserts tunnel connection
 func (s *APIServer) upsertTunnelConnection(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req upsertTunnelConnectionRawReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -2708,9 +2387,6 @@ func (s *APIServer) upsertTunnelConnection(auth ClientI, w http.ResponseWriter, 
 
 // getTunnelConnections returns a list of tunnel connections from a cluster
 func (s *APIServer) getTunnelConnections(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	conns, err := auth.GetTunnelConnections(p.ByName("cluster"))
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2728,9 +2404,6 @@ func (s *APIServer) getTunnelConnections(auth ClientI, w http.ResponseWriter, r 
 
 // getAllTunnelConnections returns a list of tunnel connections from a cluster
 func (s *APIServer) getAllTunnelConnections(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	conns, err := auth.GetAllTunnelConnections()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2748,9 +2421,6 @@ func (s *APIServer) getAllTunnelConnections(auth ClientI, w http.ResponseWriter,
 
 // deleteTunnelConnection deletes tunnel connection by name
 func (s *APIServer) deleteTunnelConnection(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	err := auth.DeleteTunnelConnection(p.ByName("cluster"), p.ByName("conn"))
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2760,9 +2430,6 @@ func (s *APIServer) deleteTunnelConnection(auth ClientI, w http.ResponseWriter, 
 
 // deleteTunnelConnections deletes all tunnel connections for cluster
 func (s *APIServer) deleteTunnelConnections(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	err := auth.DeleteTunnelConnections(p.ByName("cluster"))
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2772,9 +2439,6 @@ func (s *APIServer) deleteTunnelConnections(auth ClientI, w http.ResponseWriter,
 
 // deleteAllTunnelConnections deletes all tunnel connections
 func (s *APIServer) deleteAllTunnelConnections(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	err := auth.DeleteAllTunnelConnections()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2789,9 +2453,6 @@ type createRemoteClusterRawReq struct {
 
 // createRemoteCluster creates remote cluster
 func (s *APIServer) createRemoteCluster(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req createRemoteClusterRawReq
 	if err := httplib.ReadJSON(r, &req); err != nil {
 		return nil, trace.Wrap(err)
@@ -2808,9 +2469,6 @@ func (s *APIServer) createRemoteCluster(auth ClientI, w http.ResponseWriter, r *
 
 // getRemoteClusters returns a list of remote clusters
 func (s *APIServer) getRemoteClusters(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	clusters, err := auth.GetRemoteClusters()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2828,9 +2486,6 @@ func (s *APIServer) getRemoteClusters(auth ClientI, w http.ResponseWriter, r *ht
 
 // getRemoteCluster returns a remote cluster by name
 func (s *APIServer) getRemoteCluster(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	cluster, err := auth.GetRemoteCluster(p.ByName("cluster"))
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2840,9 +2495,6 @@ func (s *APIServer) getRemoteCluster(auth ClientI, w http.ResponseWriter, r *htt
 
 // deleteRemoteCluster deletes remote cluster by name
 func (s *APIServer) deleteRemoteCluster(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	err := auth.DeleteRemoteCluster(p.ByName("cluster"))
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2852,9 +2504,6 @@ func (s *APIServer) deleteRemoteCluster(auth ClientI, w http.ResponseWriter, r *
 
 // deleteAllRemoteClusters deletes all remote clusters
 func (s *APIServer) deleteAllRemoteClusters(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	err := auth.DeleteAllRemoteClusters()
 	if err != nil {
 		return nil, trace.Wrap(err)
@@ -2863,9 +2512,6 @@ func (s *APIServer) deleteAllRemoteClusters(auth ClientI, w http.ResponseWriter,
 }
 
 func (s *APIServer) processKubeCSR(auth ClientI, w http.ResponseWriter, r *http.Request, p httprouter.Params, version string) (interface{}, error) {
-	if r.MultipartForm != nil {
-		defer r.MultipartForm.RemoveAll()
-	}
 	var req KubeCSR
 
 	if err := httplib.ReadJSON(r, &req); err != nil {
