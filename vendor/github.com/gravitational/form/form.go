@@ -49,6 +49,7 @@ type Param func(r *http.Request) error
 //        // handle error here
 //   }
 func Parse(r *http.Request, params ...Param) error {
+	defer r.MultipartForm.RemoveAll()
 	mtype, _, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
 	if err != nil {
 		return err
@@ -165,6 +166,7 @@ func StringSlice(name string, out *[]string, predicates ...Predicate) Param {
 // usage, by executing f.Close() on each of them
 // files slice will be nil if there's an error
 func FileSlice(name string, files *Files, predicates ...Predicate) Param {
+	defer r.MultipartForm.RemoveAll()
 	return func(r *http.Request) error {
 		err := r.ParseMultipartForm(maxMemoryBytes)
 		if err != nil {
