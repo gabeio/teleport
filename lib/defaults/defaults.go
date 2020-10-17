@@ -85,7 +85,7 @@ const (
 
 	// DefaultDialTimeout is a default TCP dial timeout we set for our
 	// connection attempts
-	DefaultDialTimeout = 30 * time.Second
+	DefaultDialTimeout = 10 * time.Minute
 
 	// HTTPMaxIdleConns is the max idle connections across all hosts.
 	HTTPMaxIdleConns = 2000
@@ -97,7 +97,7 @@ const (
 	HTTPMaxConnsPerHost = 250
 
 	// HTTPIdleTimeout is a default timeout for idle HTTP connections
-	HTTPIdleTimeout = 30 * time.Second
+	HTTPIdleTimeout = 10 * time.Minute
 
 	// DefaultThrottleTimeout is a timemout used to throttle failed auth servers
 	DefaultThrottleTimeout = 10 * time.Second
@@ -105,12 +105,12 @@ const (
 	// WebHeadersTimeout is a timeout that is set for web requests
 	// before browsers raise "Timeout waiting web headers" error in
 	// the browser
-	WebHeadersTimeout = 10 * time.Second
+	WebHeadersTimeout = 10 * time.Minute
 
 	// DefaultIdleConnectionDuration indicates for how long Teleport will hold
 	// the SSH connection open if there are no reads/writes happening over it.
 	// 15 minutes default is compliant with PCI DSS standards
-	DefaultIdleConnectionDuration = 15 * time.Minute
+	DefaultIdleConnectionDuration = 30 * time.Minute
 
 	// DefaultGracefulShutdownTimeout is a default timeout for
 	// graceful shutdown waiting for connections to drain off
@@ -122,7 +122,7 @@ const (
 
 	// ReadHeadersTimeout is a default TCP timeout when we wait
 	// for the response headers to arrive
-	ReadHeadersTimeout = time.Second
+	ReadHeadersTimeout = 10 * time.Minute
 
 	// SignupTokenTTL is a default TTL for a web signup one time token
 	SignupTokenTTL = time.Hour
