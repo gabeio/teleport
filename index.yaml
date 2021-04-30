@@ -11,5 +11,5 @@ entries:
     - Teleport
     name: teleport
     urls:
-    - https://github.com/gabeio/teleport/releases/download/teleport-charts/teleport-0.0.12g.tgz
-    version: 0.0.12g
+    - https://github.com/gabeio/teleport/releases/download/teleport-charts/teleport-6.0.0g.tgz
+    version: 6.0.0g
