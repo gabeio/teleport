@@ -1,0 +1,15 @@
+apiVersion: v1
+entries:
+  teleport:
+  - apiVersion: v1
+    appVersion: "7"
+    created: "2021-04-30T01:24:14.398840892Z"
+    description: Teleport provides a secure SSH and Kubernetes remote access solution that doesn't get in the way.
+    digest: 
+    icon: https://goteleport.com/images/logos/logo-teleport-square.svg
+    keywords:
+    - Teleport
+    name: teleport
+    urls:
+    - https://github.com/gabeio/teleport/releases/download/teleport-charts/teleport-0.0.12g.tgz
+    version: 0.0.12g
