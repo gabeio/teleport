@@ -1,3 +1,4 @@
+{{- if .Values.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -6,7 +7,12 @@ metadata:
   labels:
     app: {{ .Release.Name }}
 spec:
+  {{- if .Values.service.LoadBalancer }}
   type: LoadBalancer
+  {{- end }}
+  {{- if .Values.service.ClusterIP }}
+  type: ClusterIP
+  {{- end }}
   ports:
   - name: https
     port: 443
@@ -26,3 +32,4 @@ spec:
     protocol: TCP
   selector:
     app: {{ .Release.Name }}
+{{- end -}}
