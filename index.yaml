@@ -9,7 +9,7 @@ entries:
     icon: https://goteleport.com/images/logos/logo-teleport-square.svg
     keywords:
     - Teleport
-    name: teleport
+    name: teleport-cluster
     urls:
-    - https://github.com/gabeio/teleport/releases/download/teleport-charts/teleport-6.0.0g.tgz
+    - https://github.com/gabeio/teleport/releases/download/teleport-charts/teleport-cluster-6.0.0g.tgz
     version: 6.0.0g
