@@ -6,6 +6,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ .Release.Name }}
+  annotations:
+    konghq.com/protocol: "https"
 spec:
   {{- if .Values.service.LoadBalancer }}
   type: LoadBalancer
