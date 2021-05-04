@@ -12,4 +12,4 @@ entries:
     name: teleport-cluster
     urls:
     - https://github.com/gabeio/teleport/releases/download/teleport-charts/teleport-0.0.5g.tgz
-    version: 6.0.5
+    version: 6.0.0
