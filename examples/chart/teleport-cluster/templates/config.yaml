@@ -6,6 +6,10 @@ metadata:
 data:
   teleport.yaml: |
     teleport:
+{{- if .Values.ciphersuites.enabled }}
+      ciphersuites:
+{{ .Values.ciphersuites.list }}
+{{- end }}
       log:
         severity: {{ .Values.logLevel }}
         output: stderr
