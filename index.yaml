@@ -27,7 +27,7 @@ entries:
     version: 6.0.1
   - apiVersion: v2
     appVersion: "6"
-    created: "2021-05-04T01:24:14.398840892Z"
+    created: "2021-05-02T01:24:14.398840892Z"
     description: Teleport provides a secure SSH and Kubernetes remote access solution that doesn't get in the way.
     digest: 
     icon: https://goteleport.com/images/logos/logo-teleport-square.svg
@@ -39,7 +39,7 @@ entries:
     version: 6.0.2
   - apiVersion: v2
     appVersion: "6"
-    created: "2021-05-04T01:24:14.398840892Z"
+    created: "2021-05-03T01:24:14.398840892Z"
     description: Teleport provides a secure SSH and Kubernetes remote access solution that doesn't get in the way.
     digest: 
     icon: https://goteleport.com/images/logos/logo-teleport-square.svg
@@ -49,3 +49,15 @@ entries:
     urls:
     - https://github.com/gabeio/teleport/releases/download/teleport-charts/teleport-0.0.4g.tgz
     version: 6.0.3
+  - apiVersion: v2
+    appVersion: "6"
+    created: "2021-05-04T01:24:14.398840892Z"
+    description: Teleport provides a secure SSH and Kubernetes remote access solution that doesn't get in the way.
+    digest: 
+    icon: https://goteleport.com/images/logos/logo-teleport-square.svg
+    keywords:
+    - Teleport
+    name: teleport-cluster
+    urls:
+    - https://github.com/gabeio/teleport/releases/download/teleport-charts/teleport-0.0.5g.tgz
+    version: 6.0.5
