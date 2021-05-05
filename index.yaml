@@ -11,5 +11,5 @@ entries:
     - Teleport
     name: teleport-cluster
     urls:
-    - https://github.com/gabeio/teleport/releases/download/teleport-charts/teleport-0.0.5g.tgz
+    - https://github.com/gabeio/teleport/releases/download/teleport-charts/teleport-0.0.6g.tgz
     version: 6.0.0
